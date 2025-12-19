@@ -1,0 +1,2017 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Space Invaders Natalino</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        body {
+            background: #002c02;
+            font-family: 'Arial', sans-serif;
+            color: #fafafa;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: fixed;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .game-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* Header FIXO - LAYOUT MOBILE OTIMIZADO */
+        #game-header {
+            background: #002c02;
+            height: 60px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            border-bottom: 1px solid #fafafa;
+            flex-shrink: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            font-size: 15px !important;
+            gap: 5px;
+        }
+        
+        .score-container, .music-container, .level-lives-container {
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            min-width: 0;
+        }
+        
+        /* SCORE - espaço para 6 dígitos (100.000) */
+        .score-container { 
+            justify-content: flex-start;
+            flex: 1;
+            min-width: 110px;
+        }
+        
+        .score-container span {
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+        
+        #score-value {
+            display: inline-block;
+            min-width: 60px;
+            text-align: right;
+            font-weight: bold;
+        }
+        
+        /* JINGLE BELLS + BOTÃO - centralizado */
+        .music-container { 
+            justify-content: center;
+            flex: 1;
+            gap: 5px;
+            min-width: 0;
+        }
+        
+        .music-container h1 {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 15px !important;
+            margin: 0;
+            flex-shrink: 1;
+            max-width: 150px;
+        }
+        
+        /* SVG NOTA MUSICAL (para telas < 400px) */
+        .music-icon {
+            display: none;
+            width: 24px;
+            height: 24px;
+        }
+        
+        /* BOTÃO On/Off QUADRADO */
+        #soundBtn {
+            background: #d00c0c;
+            color: #fafafa;
+            border: none;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 15px !important;
+            text-align: center;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 !important;
+            width: 30px !important;
+            height: 30px !important;
+            min-width: 30px !important;
+            min-height: 30px !important;
+            line-height: 1;
+        }
+        
+        /* LEVEL E LIVES - lado direito */
+        .level-lives-container { 
+            justify-content: flex-end;
+            flex: 1;
+            gap: 15px;
+            min-width: 130px;
+        }
+        
+        .level-lives-container span {
+            font-size: 15px;
+            white-space: nowrap;
+        }
+        
+        #game-header span,
+        #game-header h1,
+        #soundBtn {
+            font-size: 15px !important;
+            font-weight: normal;
+            margin: 0;
+            white-space: nowrap;
+            line-height: 1;
+        }
+        
+        #game-container {
+            flex: 1;
+            width: 100%;
+            background: #002c02;
+            margin-top: 60px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #game-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: #002c02;
+        }
+        
+        /* BOTÃO DE PAUSA - ESTILO CORRETO */
+        .pause-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #d00c0c; /* FUNDO VERMELHO */
+           
+            border-radius: 10px;
+            padding: 20px;
+            z-index: 200;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            max-width: 300px;
+            width: 85%;
+           
+        }
+        
+        .pause-button h2 {
+            color: #fafafa; /* TEXTO BRANCO */
+            font-size: 24px;
+            margin-bottom: 10px; /* MENOS ESPAÇO */
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        
+        .pause-button p {
+            color: #fafafa; /* TEXTO BRANCO */
+            font-size: 16px;
+            margin-bottom: 8px; /* MENOS ESPAÇO ENTRE LINHAS */
+            line-height: 1.2; /* MENOS ESPAÇAMENTO DE LINHA */
+        }
+        
+        .bonus-life {
+            color: #00ff00 !important;
+            font-weight: bold;
+            font-size: 18px !important;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .pause-button .start-next {
+            background: #fafafa; /* FUNDO BRANCO */
+            color: #d00c0c; /* LETRAS VERMELHAS */
+            border: 2px solid #fafafa;
+            padding: 12px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 200px;
+            transition: all 0.2s;
+        }
+        
+        .pause-button .start-next:hover {
+            background: #ffcccc;
+            color: #d00c0c;
+        }
+        
+        .pause-button .start-next:active {
+            transform: scale(0.98);
+        }
+        
+        /* MENSAGEM DE PERDA DE VIDA */
+        #life-lost-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #d00c0c; /* FUNDO VERMELHO */
+            border: 2px solid #fafafa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            max-width: 300px;
+            width: 80%;
+        }
+        
+        #life-lost-message h2 {
+            color: #fafafa;
+            font-size: 24px;
+            margin: 0;
+        }
+        
+        #life-lost-message p {
+            color: #fafafa;
+            font-size: 16px;
+            margin: 0;
+            line-height: 1.2;
+        }
+        
+        #life-lost-button {
+            background: #fafafa; /* FUNDO BRANCO */
+            color: #d00c0c; /* LETRAS VERMELHAS */
+            border: 2px solid #fafafa;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        #game-start, #game-over, #game-win {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #002c02;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 50;
+            padding: 20px;
+            text-align: center;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        #game-over, #game-win { 
+            display: none; 
+            justify-content: center;
+        }
+        
+        .start-content, .game-over-content, .win-content {
+            max-width: 500px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 0;
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #fafafa;
+            line-height: 1.2;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .win-title {
+            font-size: 28px !important;
+            font-weight: bold;
+            color: #fafafa;
+            font-family: 'Arial', sans-serif;
+            margin-bottom: 10px;
+        }
+        
+        .win-message {
+            font-size: 18px;
+            color: #fafafa;
+            font-family: 'Arial', sans-serif;
+            font-weight: normal;
+            margin-top: 10px;
+        }
+        
+        p {
+            margin: 8px 0;
+            line-height: 1.4;
+            color: #fafafa;
+            font-size: 15px !important;
+        }
+        
+        .instructions {
+            background: #d00c0c;
+            padding: 30px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-size: 15px !important;
+            width: 100%;
+            max-width: 400px;
+            text-align: left !important;
+        }
+        
+        .instructions p {
+            margin: 6px 0;
+            font-size: 15px !important;
+            line-height: 1.4;
+        }
+        
+        .grinch-display {
+            width: 80px;
+            height: 80px;
+            margin: 15px 0;
+            animation: bounce 1s infinite alternate;
+        }
+        
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .control-key {
+            background: #d00c0c;
+            color: #fafafa;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 15px !important;
+            min-width: 50px;
+        }
+        
+        button {
+            background: #d00c0c;
+            color: #fafafa;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            min-width: 200px;
+        }
+        
+        /* RODAPÉ COM LINK */
+        #game-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #002c02;
+            padding: 0;
+            border-top: none;
+            z-index: 100;
+            height: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .footer-line {
+            width: 100%;
+            height: 1px;
+            background: #fafafa;
+            margin: 0;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 5px 10px;
+            flex: 1;
+        }
+        
+        .footer-left {
+            text-align: left;
+            font-size: 12px;
+            color: #fafafa;
+            flex: 1;
+        }
+        
+        .footer-right {
+            text-align: right;
+            flex: 1;
+        }
+        
+        .games-link {
+            color: #fafafa;
+            text-decoration: underline;
+            font-size: 12px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        
+        .games-link:hover {
+            opacity: 0.8;
+        }
+        
+        .grinch-svg, .music-svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* MEDIA QUERIES */
+        @media (max-width: 768px) {
+            #game-header {
+                height: 55px;
+                padding: 0 8px;
+                gap: 4px;
+            }
+            
+            .score-container {
+                min-width: 100px;
+            }
+            
+            #score-value {
+                min-width: 55px;
+            }
+            
+            .music-container h1 {
+                max-width: 120px;
+                font-size: 14px !important;
+            }
+            
+            #soundBtn {
+                width: 28px !important;
+                height: 28px !important;
+                min-width: 28px !important;
+                min-height: 28px !important;
+                font-size: 14px !important;
+            }
+            
+            .level-lives-container {
+                min-width: 120px;
+                gap: 12px;
+            }
+            
+            .level-lives-container span {
+                font-size: 14px !important;
+            }
+            
+            #game-container {
+                margin-top: 55px;
+                margin-bottom: 40px;
+            }
+            
+            .pause-button {
+                padding: 15px;
+                max-width: 280px;
+            }
+            
+            .pause-button h2 {
+                font-size: 20px;
+                margin-bottom: 8px;
+            }
+            
+            .pause-button p {
+                font-size: 15px;
+                margin-bottom: 6px;
+            }
+            
+            .pause-button .start-next {
+                padding: 10px 20px;
+                font-size: 16px;
+                min-width: 180px;
+                margin-top: 12px;
+            }
+            
+            #life-lost-message {
+                padding: 15px;
+            }
+            
+            #life-lost-message h2 {
+                font-size: 20px;
+            }
+            
+            #life-lost-button {
+                padding: 8px 16px;
+                font-size: 15px;
+            }
+        }
+        
+        /* TELAS < 400px - MOSTRAR SVG NOTA MUSICAL */
+        @media (max-width: 399px) {
+            .music-container h1 {
+                display: none;
+            }
+            
+            .music-icon {
+                display: block;
+            }
+            
+            #soundBtn {
+                width: 26px !important;
+                height: 26px !important;
+                min-width: 26px !important;
+                min-height: 26px !important;
+                font-size: 13px !important;
+            }
+            
+            .pause-button {
+                max-width: 250px;
+                padding: 12px;
+            }
+            
+            .pause-button h2 {
+                font-size: 18px;
+                margin-bottom: 6px;
+            }
+            
+            .pause-button p {
+                font-size: 14px;
+                margin-bottom: 4px;
+            }
+            
+            .pause-button .start-next {
+                padding: 8px 16px;
+                font-size: 15px;
+                min-width: 160px;
+                margin-top: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #game-header {
+                height: 50px;
+                padding: 0 6px;
+                gap: 3px;
+            }
+            
+            .score-container {
+                min-width: 90px;
+            }
+            
+            .score-container span {
+                font-size: 14px !important;
+            }
+            
+            #score-value {
+                min-width: 50px;
+                font-size: 14px !important;
+            }
+            
+            .music-icon {
+                width: 22px;
+                height: 22px;
+            }
+            
+            #soundBtn {
+                width: 26px !important;
+                height: 26px !important;
+                min-width: 26px !important;
+                min-height: 26px !important;
+                font-size: 13px !important;
+            }
+            
+            .level-lives-container {
+                min-width: 110px;
+                gap: 10px;
+            }
+            
+            .level-lives-container span {
+                font-size: 13px !important;
+            }
+            
+            #game-container {
+                margin-top: 50px;
+                margin-bottom: 40px;
+            }
+            
+            .footer-left, .games-link {
+                font-size: 11px;
+            }
+        }
+        
+        /* IPHONE 5SE (320x568) */
+        @media (max-width: 350px) and (max-height: 600px) {
+            #game-header {
+                height: 45px;
+                padding: 0 4px;
+                gap: 2px;
+            }
+            
+            .score-container {
+                min-width: 80px;
+            }
+            
+            .score-container span {
+                font-size: 13px !important;
+            }
+            
+            #score-value {
+                min-width: 45px;
+                font-size: 13px !important;
+            }
+            
+            .music-icon {
+                width: 20px;
+                height: 20px;
+            }
+            
+            #soundBtn {
+                width: 24px !important;
+                height: 24px !important;
+                min-width: 24px !important;
+                min-height: 24px !important;
+                font-size: 12px !important;
+            }
+            
+            .level-lives-container {
+                min-width: 100px;
+                gap: 8px;
+            }
+            
+            .level-lives-container span {
+                font-size: 12px !important;
+            }
+            
+            #game-container {
+                margin-top: 45px;
+                margin-bottom: 40px;
+            }
+            
+            #game-start {
+                padding: 8px 10px;
+            }
+            
+            .start-content {
+                gap: 8px;
+            }
+            
+            h1 {
+                font-size: 20px;
+                margin-bottom: 8px;
+            }
+            
+            p {
+                font-size: 14px !important;
+                margin: 5px 0;
+            }
+            
+            .instructions {
+                padding: 10px 8px;
+                margin: 8px 0;
+            }
+            
+            .instructions p {
+                font-size: 14px !important;
+                margin: 4px 0;
+            }
+            
+            .controls {
+                gap: 6px;
+                margin: 10px 0;
+            }
+            
+            .control-key {
+                padding: 6px 8px;
+                font-size: 14px !important;
+                min-width: 42px;
+            }
+            
+            button {
+                padding: 10px 15px;
+                font-size: 16px;
+                margin-top: 8px;
+                margin-bottom: 12px;
+                min-width: 170px;
+            }
+            
+            .grinch-display {
+                width: 50px;
+                height: 50px;
+                margin: 10px 0;
+            }
+            
+            .footer-left, .games-link {
+                font-size: 10px;
+            }
+            
+            .pause-button {
+                max-width: 220px;
+                padding: 10px;
+            }
+            
+            .pause-button h2 {
+                font-size: 16px;
+                margin-bottom: 5px;
+            }
+            
+            .pause-button p {
+                font-size: 13px;
+                margin-bottom: 3px;
+                line-height: 1.1;
+            }
+            
+            .pause-button .start-next {
+                padding: 6px 12px;
+                font-size: 14px;
+                min-width: 140px;
+                margin-top: 8px;
+            }
+        }
+        
+        /* Desktop */
+        @media (min-width: 769px) {
+            #soundBtn {
+                width: 32px !important;
+                height: 32px !important;
+                min-width: 32px !important;
+                min-height: 32px !important;
+            }
+            
+            .score-container {
+                min-width: 120px;
+            }
+            
+            #score-value {
+                min-width: 70px;
+            }
+        }
+        
+        /* Telas muito curtas */
+        @media (max-height: 500px) {
+            #game-start {
+                padding-top: 5px;
+            }
+            
+            h1 {
+                font-size: 20px;
+                margin-bottom: 6px;
+            }
+            
+            .instructions {
+                padding: 8px 10px;
+                margin: 6px 0;
+            }
+            
+            .instructions p {
+                font-size: 14px !important;
+                margin: 3px 0;
+            }
+            
+            button {
+                padding: 8px 15px;
+                font-size: 15px;
+                margin-top: 6px;
+                margin-bottom: 8px;
+                min-width: 150px;
+            }
+            
+            .grinch-display {
+                width: 45px;
+                height: 45px;
+                margin: 8px 0;
+            }
+            
+            .pause-button {
+                padding: 12px;
+            }
+            
+            .pause-button h2 {
+                font-size: 18px;
+                margin-bottom: 6px;
+            }
+            
+            .pause-button p {
+                font-size: 14px;
+                margin-bottom: 4px;
+            }
+            
+            .pause-button .start-next {
+                padding: 8px 16px;
+                font-size: 16px;
+                min-width: 160px;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-wrapper">
+        <!-- Header fixo -->
+        <div id="game-header">
+            <div class="score-container">
+                <span>Score: <span id="score-value">0</span></span>
+            </div>
+            
+            <div class="music-container">
+                <h1>Jingle Bells</h1>
+                <div class="music-icon" id="music-icon">
+                    <!-- SVG será inserido aqui via JavaScript -->
+                </div>
+                <button id="soundBtn">On</button>
+            </div>
+            
+            <div class="level-lives-container">
+                <span>Level: <span id="level-value">1</span></span>
+                <span>Lives: <span id="lives-value">3</span></span>
+            </div>
+        </div>
+        
+        <!-- Container do jogo -->
+        <div id="game-container">
+            <canvas id="game-canvas"></canvas>
+            
+            <!-- BOTÃO DE PAUSA PARA INICIAR PRÓXIMO NÍVEL -->
+            <div class="pause-button" id="level-pause">
+                <h2>PAUSA!</h2>
+                <p>Nível atual: <span id="current-level-display">1</span></p>
+                <p>Próximo nível: <span id="next-level">2</span></p>
+                <p id="bonus-life-message" class="bonus-life" style="display: none;">🎉 +1 VIDA BÓNUS! 🎉</p>
+                <button class="start-next">INICIAR NÍVEL</button>
+            </div>
+            
+            <!-- MENSAGEM DE PERDA DE VIDA -->
+            <div id="life-lost-message">
+                <h2>Perdeu uma vida!</h2>
+                <p>Continue no mesmo nível.</p>
+                <p id="lives-remaining">Vidas restantes: 2</p>
+                <button id="life-lost-button">CONTINUAR</button>
+            </div>
+            
+            <div id="game-start">
+                <div class="start-content">
+                    <h1>SPACE INVADERS NATALINO</h1>
+                    <p>Salve o Natal dos fantasmas rebeldes!</p>
+                    
+                    <div class="instructions">
+                
+                        <p><strong>MOBILE:</strong> arrastar mover, tocar atirar</p>
+                        <br>
+                        <p><strong>ACERTAR:</strong> 100 pontos</p>
+                        <p><strong>VIDAS:</strong> começa com 3 vidas</p>
+                        <p><strong>BÓNUS:</strong> +1 vida a cada 5 níveis</p>
+                        <p><strong>ATAQUES:</strong> inimigos que atacam!</p>
+                        <p><strong>ATENÇÃO:</strong> tem de se mover rápido!</p>
+                        <p><strong>INIMIGOS:</strong> terríveis por nível</p>
+                        <p><strong>PAUSA:</strong> após cada nível, clique para continuar</p>
+                    </div>
+                    
+                    <div class="controls">
+                                                <p><strong>DESKTOP:</strong></p>
+                        <div class="control-key">←</div>
+                        <div class="control-key">→</div>
+                        <div class="control-key">Espaço</div>
+                    </div>
+                    
+                    <button id="start-button">START</button>
+                </div>
+            </div>
+            
+            <div id="game-over">
+                <div class="game-over-content">
+                    <h1>GAME OVER</h1>
+                    <div class="grinch-display" id="grinch-display"></div>
+                    <p id="final-score">Score: 0</p>
+                    <p id="game-message"></p>
+                    <button id="restart-button">PLAY AGAIN!</button>
+                </div>
+            </div>
+            
+            <!-- TELA DE VITÓRIA (100.000 pontos) -->
+            <div id="game-win">
+                <div class="win-content">
+                    <h1 class="win-title">YOU WIN!</h1>
+                    <div class="grinch-display" id="win-grinch-display"></div>
+                    <p id="win-score">Score: 0</p>
+                    <p class="win-message">Salvou o Natal!</p>
+                    <button id="win-restart-button">PLAY AGAIN!</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- RODAPÉ COM LINK -->
+        <div id="game-footer">
+            <hr class="footer-line">
+            <div class="footer-content">
+                <div class="footer-left">&copy; Eduardo Firmino//2025</div>
+                <div class="footer-right">
+                    <a class="games-link" id="games-link" target="_blank">Quero jogar outros jogos.</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class SpaceInvadersChristmas {
+            constructor() {
+                this.canvas = document.getElementById('game-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.gameState = 'start';
+                this.score = 0;
+                this.lives = 3;
+                this.level = 1;
+                this.lifeLost = false;
+                this.isMobile = false;
+                this.MAX_SCORE = 100000;
+                this.currentLevelEnemies = [];
+                this.enemiesKilledThisLevel = new Set();
+                this.droppingEnemies = []; // Inimigos que "caem" do bloco
+                this.bonusLifeGivenAt = 0; // Último nível que deu vida bónus
+                
+                this.player = { x: 0, y: 0, width: 60, height: 60, speed: 6 };
+                this.bullets = [];
+                this.enemies = [];
+                this.particles = [];
+                
+                this.keys = {};
+                this.shootCooldown = 0;
+                this.touchStartX = 0;
+                this.playerTargetX = null;
+                this.isShooting = false;
+                this.shootInterval = null;
+                
+                this.defenseLineY = 0;
+                
+                this.sprites = {
+                    player: '🎅',
+                    bullet: ['🔴', '🟢', '🔵', '🟡'],
+                    enemy1: '🎁',
+                    enemy2: '👻',
+                    droppingEnemy: '💀', // Inimigo especial que cai
+                    explosion: '✨',
+                    grinch: '👺'
+                };
+                
+                this.audioContext = null;
+                this.isPlaying = true;
+                this.loopTimer = null;
+                this.activeOscillators = [];
+                
+                this.init();
+            }
+            
+            init() {
+                this.setupCanvas();
+                this.setupControls();
+                this.setupButtons();
+                this.setupAudioControl();
+                this.createLevelEnemies();
+                this.createGrinchSVG();
+                this.createMusicSVG();
+                this.setupFooterLink();
+                this.gameLoop();
+            }
+            
+            setupCanvas() {
+                const container = document.getElementById('game-container');
+                
+                const updateSize = () => {
+                    this.canvas.width = container.clientWidth;
+                    this.canvas.height = container.clientHeight;
+                    
+                    // DETECTAR MOBILE CORRETAMENTE
+                    this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                                   window.innerWidth <= 768;
+                    
+                    const playerBottomMargin = this.isMobile ? 3 : 80;
+                    this.player.y = this.canvas.height - this.player.height - playerBottomMargin;
+                    this.player.x = this.canvas.width / 2 - this.player.width / 2;
+                    
+                    this.defenseLineY = this.player.y - 5;
+                    
+                    // CORRIGIR POSIÇÃO DOS INIMIGOS NO MOBILE
+                    if (this.enemies.length > 0) {
+                        this.repositionEnemies();
+                    }
+                };
+                
+                updateSize();
+                window.addEventListener('resize', updateSize);
+                window.addEventListener('orientationchange', () => setTimeout(updateSize, 100));
+            }
+            
+            createGrinchSVG() {
+                const grinchDisplay = document.getElementById('grinch-display');
+                const winGrinchDisplay = document.getElementById('win-grinch-display');
+                
+                const grinchSVG = `
+                    <svg class="grinch-svg" width="80" height="80" viewBox="0 0 100 100">
+                        <path d="M50,30 Q70,25 85,40 Q90,60 85,80 Q70,95 50,95 Q30,95 15,80 Q10,60 15,40 Q30,25 50,30" 
+                              fill="#9ACD32" stroke="#7CFC00" stroke-width="2"/>
+                        <ellipse cx="35" cy="45" rx="8" ry="10" fill="#FFD700" stroke="#000" stroke-width="1"/>
+                        <ellipse cx="65" cy="45" rx="8" ry="10" fill="#FFD700" stroke="#000" stroke-width="1"/>
+                        <circle cx="38" cy="45" r="3" fill="#FF4500"/>
+                        <circle cx="62" cy="45" r="3" fill="#FF4500"/>
+                        <path d="M25,35 Q35,30 45,33" stroke="#000" stroke-width="3" fill="none"/>
+                        <path d="M55,33 Q65,30 75,35" stroke="#000" stroke-width="3" fill="none"/>
+                        <path d="M30,65 Q50,75 70,65" stroke="#8B0000" stroke-width="3" fill="none"/>
+                        <path d="M35,68 Q50,73 65,68" stroke="#8B0000" stroke-width="2" fill="none"/>
+                        <ellipse cx="50" cy="55" rx="4" ry="3" fill="#8B0000"/>
+                        <path d="M50,25 Q45,15 40,20 Q35,10 30,20 Q25,5 20,25 Q15,10 10,30" 
+                              stroke="#006400" stroke-width="4" fill="none"/>
+                        <path d="M50,25 Q55,15 60,20 Q65,10 70,20 Q75,5 80,25 Q85,10 90,30" 
+                              stroke="#006400" stroke-width="4" fill="none"/>
+                        <path d="M28,50 Q32,52 35,50" stroke="#000" stroke-width="1" fill="none"/>
+                        <path d="M65,50 Q68,52 72,50" stroke="#000" stroke-width="1" fill="none"/>
+                    </svg>
+                `;
+                
+                grinchDisplay.innerHTML = grinchSVG;
+                winGrinchDisplay.innerHTML = grinchSVG;
+            }
+            
+            createMusicSVG() {
+                const musicIcon = document.getElementById('music-icon');
+                musicIcon.innerHTML = `
+                    <svg class="music-svg" viewBox="0 0 24 24" fill="#fafafa">
+                        <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                    </svg>
+                `;
+            }
+            
+            setupFooterLink() {
+                const gamesLink = document.getElementById('games-link');
+                gamesLink.addEventListener('click', () => {
+                    window.open('https://dos.zone/', '_blank');
+                });
+                
+                gamesLink.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    window.open('https://dos.zone/', '_blank');
+                });
+            }
+            
+            // SISTEMA FIXO: 8 colunas × 6 filas
+            createLevelEnemies() {
+                this.currentLevelEnemies = [];
+                this.droppingEnemies = []; // Limpar inimigos que caem
+                const enemyTypes = [this.sprites.enemy1, this.sprites.enemy2];
+                
+                const cols = 8; // SEMPRE 8 colunas
+                const rows = 6; // SEMPRE 6 filas
+                
+                // AJUSTAR ESPAÇAMENTO PARA MOBILE
+                const spacingX = this.isMobile ? 
+                    Math.min(50, this.canvas.width / (cols + 1.5)) : 
+                    Math.min(70, this.canvas.width / (cols + 1));
+                
+                const spacingY = this.isMobile ? 45 : 60;
+                const startY = this.isMobile ? 10 : 30;
+                
+                for (let row = 0; row < rows; row++) {
+                    for (let col = 0; col < cols; col++) {
+                        const type = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+                        this.currentLevelEnemies.push({
+                            x: spacingX + col * spacingX,
+                            y: startY + row * spacingY,
+                            width: this.isMobile ? 40 : 50,
+                            height: this.isMobile ? 40 : 50,
+                            type: type,
+                            speed: 0.3 + (this.level * 0.08),
+                            direction: 1,
+                            points: type === this.sprites.enemy1 ? 100 : 150,
+                            id: `${row}-${col}`,
+                            isDropping: false // Não é um que cai inicialmente
+                        });
+                    }
+                }
+                
+                // A CADA 3 NÍVEIS, CRIAR 1-2 INIMIGOS QUE "CAEM"
+                if (this.level % 3 === 0 && this.level > 1) {
+                    this.createDroppingEnemies();
+                }
+                
+                this.recreateActiveEnemies();
+            }
+            
+            createDroppingEnemies() {
+                // Selecionar 1-2 inimigos aleatórios para "cair"
+                const numToDrop = Math.random() > 0.5 ? 2 : 1;
+                const availableEnemies = [...this.currentLevelEnemies];
+                
+                for (let i = 0; i < numToDrop && availableEnemies.length > 0; i++) {
+                    const randomIndex = Math.floor(Math.random() * availableEnemies.length);
+                    const enemyToDrop = availableEnemies[randomIndex];
+                    
+                    // Criar um inimigo especial que cai
+                    this.droppingEnemies.push({
+                        x: enemyToDrop.x,
+                        y: enemyToDrop.y,
+                        width: enemyToDrop.width,
+                        height: enemyToDrop.height,
+                        type: this.sprites.droppingEnemy, // Tipo especial
+                        speed: 1.5 + (this.level * 0.1), // Mais rápido que inimigos normais
+                        points: 200, // Vale mais pontos
+                        id: `dropping-${i}-${this.level}`,
+                        isDropping: true,
+                        originalX: enemyToDrop.x, // Posição original para referência
+                        dropDirection: Math.random() > 0.5 ? 1 : -1 // Direção aleatória
+                    });
+                    
+                    // Remover da lista de inimigos normais
+                    this.currentLevelEnemies = this.currentLevelEnemies.filter(e => 
+                        e.id !== enemyToDrop.id
+                    );
+                    
+                    availableEnemies.splice(randomIndex, 1);
+                }
+            }
+            
+            recreateActiveEnemies() {
+                this.enemies = [];
+                
+                // Adicionar inimigos normais
+                for (const enemy of this.currentLevelEnemies) {
+                    if (!this.enemiesKilledThisLevel.has(enemy.id)) {
+                        this.enemies.push({
+                            ...enemy,
+                            x: enemy.x,
+                            y: enemy.y,
+                            width: enemy.width,
+                            height: enemy.height,
+                            type: enemy.type,
+                            speed: enemy.speed,
+                            direction: enemy.direction,
+                            points: enemy.points,
+                            isDropping: false
+                        });
+                    }
+                }
+                
+                // Adicionar inimigos que caem
+                for (const droppingEnemy of this.droppingEnemies) {
+                    this.enemies.push({
+                        ...droppingEnemy,
+                        isDropping: true
+                    });
+                }
+            }
+            
+            repositionEnemies() {
+                if (this.enemies.length === 0) return;
+                
+                const cols = 8;
+                const spacingX = this.isMobile ? 
+                    Math.min(50, this.canvas.width / (cols + 1.5)) : 
+                    Math.min(70, this.canvas.width / (cols + 1));
+                
+                // REORGANIZAR TODOS OS INIMIGOS
+                const rows = 6;
+                const spacingY = this.isMobile ? 45 : 60;
+                const startY = this.isMobile ? 10 : 30;
+                
+                for (let i = 0; i < this.enemies.length; i++) {
+                    const enemy = this.enemies[i];
+                    
+                    // Só reposicionar inimigos normais (não os que estão caindo)
+                    if (!enemy.isDropping) {
+                        const originalIdParts = enemy.id.split('-');
+                        if (originalIdParts.length === 2) {
+                            const row = parseInt(originalIdParts[0]);
+                            const col = parseInt(originalIdParts[1]);
+                            
+                            // Reposicionar baseado nas novas dimensões
+                            enemy.x = spacingX + col * spacingX;
+                            enemy.y = startY + row * spacingY;
+                            enemy.width = this.isMobile ? 40 : 50;
+                            enemy.height = this.isMobile ? 40 : 50;
+                        }
+                    }
+                    
+                    enemy.x = Math.max(10, Math.min(this.canvas.width - enemy.width - 10, enemy.x));
+                }
+            }
+            
+            setupControls() {
+                // Controles de teclado
+                document.addEventListener('keydown', (e) => {
+                    if (this.gameState !== 'playing') return;
+                    
+                    this.keys[e.key] = true;
+                    
+                    // Iniciar disparo automático ao pressionar Espaço
+                    if (e.key === ' ' && !this.isShooting) {
+                        this.startAutoShoot();
+                        e.preventDefault();
+                    }
+                });
+                
+                document.addEventListener('keyup', (e) => {
+                    this.keys[e.key] = false;
+                    
+                    // Parar disparo automático ao soltar Espaço
+                    if (e.key === ' ') {
+                        this.stopAutoShoot();
+                    }
+                });
+                
+                // Controles de toque/mouse para mobile/desktop
+                this.canvas.addEventListener('mousedown', (e) => {
+                    if (this.gameState !== 'playing') return;
+                    
+                    this.touchStartX = e.clientX;
+                    this.playerTargetX = this.player.x;
+                    this.startAutoShoot();
+                });
+                
+                this.canvas.addEventListener('mousemove', (e) => {
+                    if (this.gameState !== 'playing') return;
+                    
+                    if (e.buttons === 1) {
+                        const deltaX = e.clientX - this.touchStartX;
+                        this.playerTargetX = Math.max(0, 
+                            Math.min(this.canvas.width - this.player.width, 
+                                this.player.x + deltaX));
+                        this.touchStartX = e.clientX;
+                    }
+                });
+                
+                this.canvas.addEventListener('mouseup', () => {
+                    if (this.gameState !== 'playing') return;
+                    
+                    this.playerTargetX = null;
+                    this.stopAutoShoot();
+                });
+                
+                this.canvas.addEventListener('mouseleave', () => {
+                    if (this.gameState !== 'playing') return;
+                    
+                    this.playerTargetX = null;
+                    this.stopAutoShoot();
+                });
+                
+                // Controles touch para mobile
+                this.canvas.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    if (this.gameState !== 'playing') return;
+                    
+                    const touch = e.touches[0];
+                    this.touchStartX = touch.clientX;
+                    this.playerTargetX = this.player.x;
+                    this.startAutoShoot();
+                }, { passive: false });
+                
+                this.canvas.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    if (this.gameState !== 'playing') return;
+                    
+                    const touch = e.touches[0];
+                    const deltaX = touch.clientX - this.touchStartX;
+                    
+                    // MOVIMENTO MAIS SUAVE NO MOBILE
+                    this.playerTargetX = Math.max(0, 
+                        Math.min(this.canvas.width - this.player.width, 
+                            this.player.x + deltaX * 0.8));
+                    
+                    this.touchStartX = touch.clientX;
+                }, { passive: false });
+                
+                this.canvas.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.playerTargetX = null;
+                    this.stopAutoShoot();
+                }, { passive: false });
+            }
+            
+            startAutoShoot() {
+                if (this.isShooting) return;
+                
+                this.isShooting = true;
+                this.shoot(); // Disparo imediato
+                
+                // Configurar intervalo de disparo automático
+                this.shootInterval = setInterval(() => {
+                    if (this.gameState === 'playing' && this.isShooting) {
+                        this.shoot();
+                    }
+                }, 300); // Disparar a cada 300ms
+            }
+            
+            stopAutoShoot() {
+                this.isShooting = false;
+                if (this.shootInterval) {
+                    clearInterval(this.shootInterval);
+                    this.shootInterval = null;
+                }
+            }
+            
+            setupButtons() {
+                document.getElementById('start-button').addEventListener('click', () => {
+                    this.startGame();
+                });
+                
+                document.getElementById('restart-button').addEventListener('click', () => {
+                    this.restartGame();
+                });
+                
+                document.getElementById('win-restart-button').addEventListener('click', () => {
+                    this.restartGame();
+                });
+                
+                document.getElementById('life-lost-button').addEventListener('click', () => {
+                    this.continueAfterLifeLost();
+                });
+                
+                // Botão de pausa para próximo nível
+                document.querySelector('.start-next').addEventListener('click', () => {
+                    this.startNextLevel();
+                });
+            }
+            
+            setupAudioControl() {
+                const notes = {
+                    E5: 659.25,
+                    G5: 783.99,
+                    C5: 523.25,
+                    D5: 587.33,
+                    F5: 698.46
+                };
+
+                const melody = [
+                    ['E5', 0.3], ['E5', 0.3], ['E5', 0.6],
+                    ['E5', 0.3], ['E5', 0.3], ['E5', 0.6],
+                    ['E5', 0.3], ['G5', 0.3], ['C5', 0.3], ['D5', 0.3], ['E5', 0.9],
+                    ['F5', 0.3], ['F5', 0.3], ['F5', 0.3], ['F5', 0.3],
+                    ['F5', 0.3], ['E5', 0.3], ['E5', 0.3], ['E5', 0.3],
+                    ['E5', 0.3], ['D5', 0.3], ['D5', 0.3], ['E5', 0.3],
+                    ['D5', 0.6], ['G5', 0.6]
+                ];
+
+                const playMelody = () => {
+                    if (!this.isPlaying) return;
+
+                    let time = this.audioContext.currentTime;
+
+                    melody.forEach(([note, duration]) => {
+                        const osc = this.audioContext.createOscillator();
+                        const gain = this.audioContext.createGain();
+
+                        osc.type = 'square';
+                        osc.frequency.value = notes[note];
+
+                        gain.gain.setValueAtTime(0.2, time);
+                        gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
+
+                        osc.connect(gain);
+                        gain.connect(this.audioContext.destination);
+
+                        osc.start(time);
+                        osc.stop(time + duration);
+
+                        this.activeOscillators.push({osc, stopTime: time + duration});
+                        
+                        time += duration;
+                    });
+
+                    const totalDuration = melody.reduce((t, n) => t + n[1], 0);
+                    this.loopTimer = setTimeout(playMelody, totalDuration * 1000);
+                };
+
+                const button = document.getElementById('soundBtn');
+                
+                const toggleSound = () => {
+                    if (!this.audioContext) {
+                        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    }
+
+                    if (!this.isPlaying) {
+                        this.audioContext.resume();
+                        this.isPlaying = true;
+                        playMelody();
+                        button.textContent = 'On';
+                    } else {
+                        this.isPlaying = false;
+                        clearTimeout(this.loopTimer);
+                        
+                        this.activeOscillators.forEach(({osc, stopTime}) => {
+                            try {
+                                osc.stop(0);
+                            } catch(e) {}
+                        });
+                        this.activeOscillators = [];
+                        
+                        button.textContent = 'Off';
+                    }
+                };
+
+                button.addEventListener('click', toggleSound);
+                
+                setTimeout(() => {
+                    toggleSound();
+                }, 500);
+            }
+            
+            playBulletSound() {
+                if (this.audioContext && this.isPlaying) {
+                    const time = this.audioContext.currentTime;
+                    const osc = this.audioContext.createOscillator();
+                    const gain = this.audioContext.createGain();
+                    
+                    osc.type = 'sine';
+                    osc.frequency.value = 800;
+                    
+                    gain.gain.setValueAtTime(0.1, time);
+                    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.1);
+                    
+                    osc.connect(gain);
+                    gain.connect(this.audioContext.destination);
+                    
+                    osc.start(time);
+                    osc.stop(time + 0.1);
+                    
+                    this.activeOscillators.push({osc, stopTime: time + 0.1});
+                }
+            }
+            
+            playBonusSound() {
+                if (this.audioContext && this.isPlaying) {
+                    const time = this.audioContext.currentTime;
+                    
+                    // Som especial para vida bónus
+                    for (let i = 0; i < 3; i++) {
+                        const osc = this.audioContext.createOscillator();
+                        const gain = this.audioContext.createGain();
+                        
+                        osc.type = 'sine';
+                        osc.frequency.value = 800 + (i * 200);
+                        
+                        gain.gain.setValueAtTime(0.15, time + (i * 0.1));
+                        gain.gain.exponentialRampToValueAtTime(0.001, time + (i * 0.1) + 0.2);
+                        
+                        osc.connect(gain);
+                        gain.connect(this.audioContext.destination);
+                        
+                        osc.start(time + (i * 0.1));
+                        osc.stop(time + (i * 0.1) + 0.2);
+                        
+                        this.activeOscillators.push({osc, stopTime: time + (i * 0.1) + 0.2});
+                    }
+                }
+            }
+            
+            checkForBonusLife() {
+                // DAR VIDA BÓNUS A CADA 5 NÍVEIS (alterado de 10 para 5)
+                if (this.level % 5 === 0 && this.level > this.bonusLifeGivenAt) {
+                    this.lives++;
+                    this.bonusLifeGivenAt = this.level;
+                    document.getElementById('lives-value').textContent = this.lives;
+                    
+                    // Mostrar mensagem de bónus
+                    document.getElementById('bonus-life-message').style.display = 'block';
+                    
+                    // Criar partículas de celebração
+                    for (let i = 0; i < 20; i++) {
+                        this.particles.push({
+                            x: this.canvas.width / 2,
+                            y: this.canvas.height / 2,
+                            vx: (Math.random() - 0.5) * 8,
+                            vy: (Math.random() - 0.5) * 8 - 4,
+                            life: 70,
+                            type: 'bonus'
+                        });
+                    }
+                    
+                    // Tocar som especial
+                    this.playBonusSound();
+                    
+                    return true;
+                }
+                return false;
+            }
+            
+            checkDefenseLine() {
+                // VERIFICA APENAS INIMIGOS NORMAIS (NÃO OS QUE "CAEM")
+                for (const enemy of this.enemies) {
+                    // Apenas inimigos normais perdem vida ao passar da linha
+                    if (!enemy.isDropping && enemy.y + enemy.height >= this.defenseLineY) {
+                        return enemy;
+                    }
+                }
+                return null;
+            }
+            
+            checkWinCondition() {
+                if (this.score >= this.MAX_SCORE) {
+                    return true;
+                }
+                return false;
+            }
+            
+            loseLife() {
+                this.lives--;
+                document.getElementById('lives-value').textContent = this.lives;
+                document.getElementById('lives-remaining').textContent = `Vidas restantes: ${this.lives}`;
+                
+                if (this.lives <= 0) {
+                    this.gameOver(false, "Você foi capturado!");
+                } else {
+                    this.lifeLost = true;
+                    this.gameState = 'paused';
+                    
+                    document.getElementById('life-lost-message').style.display = 'flex';
+                    
+                    if (this.audioContext && this.isPlaying) {
+                        const time = this.audioContext.currentTime;
+                        const osc = this.audioContext.createOscillator();
+                        const gain = this.audioContext.createGain();
+                        
+                        osc.type = 'sine';
+                        osc.frequency.value = 300;
+                        
+                        gain.gain.setValueAtTime(0.2, time);
+                        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.5);
+                        
+                        osc.connect(gain);
+                        gain.connect(this.audioContext.destination);
+                        
+                        osc.start(time);
+                        osc.stop(time + 0.5);
+                        
+                        this.activeOscillators.push({osc, stopTime: time + 0.5});
+                    }
+                }
+            }
+            
+            continueAfterLifeLost() {
+                this.recreateActiveEnemies();
+                
+                this.player.x = this.canvas.width / 2 - this.player.width / 2;
+                this.playerTargetX = null;
+                
+                this.bullets = [];
+                this.particles = [];
+                
+                document.getElementById('life-lost-message').style.display = 'none';
+                
+                this.lifeLost = false;
+                this.gameState = 'playing';
+            }
+            
+            startGame() {
+                this.gameState = 'playing';
+                document.getElementById('game-start').style.display = 'none';
+                this.createLevelEnemies();
+            }
+            
+            startNextLevel() {
+                // Esconder mensagem de bónus se estiver visível
+                document.getElementById('bonus-life-message').style.display = 'none';
+                
+                // INCREMENTAR O NÍVEL ANTES DE CRIAR OS NOVOS INIMIGOS
+                this.level++;
+                document.getElementById('level-value').textContent = this.level;
+                
+                // Verificar se ganhou vida bónus
+                this.checkForBonusLife();
+                
+                // Limpar para o próximo nível
+                this.enemiesKilledThisLevel.clear();
+                this.droppingEnemies = [];
+                this.bullets = [];
+                this.particles = [];
+                
+                // Criar inimigos do novo nível
+                this.createLevelEnemies();
+                
+                // Reposicionar jogador no centro
+                this.player.x = this.canvas.width / 2 - this.player.width / 2;
+                this.playerTargetX = null;
+                
+                // Esconder tela de pausa
+                document.getElementById('level-pause').style.display = 'none';
+                
+                // Mudar estado para playing
+                this.gameState = 'playing';
+            }
+            
+            restartGame() {
+                this.score = 0;
+                this.lives = 3;
+                this.level = 1;
+                this.bonusLifeGivenAt = 0;
+                this.bullets = [];
+                this.particles = [];
+                this.lifeLost = false;
+                this.enemiesKilledThisLevel.clear();
+                this.droppingEnemies = [];
+                this.stopAutoShoot();
+                
+                // Esconder mensagem de bónus
+                document.getElementById('bonus-life-message').style.display = 'none';
+                
+                this.createLevelEnemies();
+                
+                this.player.x = this.canvas.width / 2 - this.player.width / 2;
+                this.playerTargetX = null;
+                
+                document.getElementById('game-over').style.display = 'none';
+                document.getElementById('game-win').style.display = 'none';
+                document.getElementById('life-lost-message').style.display = 'none';
+                document.getElementById('level-pause').style.display = 'none';
+                document.getElementById('score-value').textContent = '0';
+                document.getElementById('lives-value').textContent = '3';
+                document.getElementById('level-value').textContent = '1';
+                
+                this.gameState = 'playing';
+            }
+            
+            update() {
+                if (this.gameState !== 'playing') return;
+                
+                if (this.checkWinCondition()) {
+                    this.winGame();
+                    return;
+                }
+                
+                // VERIFICAR APENAS INIMIGOS NORMAIS QUE PASSARAM DA LINHA
+                const enemyAtLine = this.checkDefenseLine();
+                if (enemyAtLine) {
+                    this.enemiesKilledThisLevel.add(enemyAtLine.id);
+                    
+                    const index = this.enemies.indexOf(enemyAtLine);
+                    if (index > -1) {
+                        this.enemies.splice(index, 1);
+                    }
+                    
+                    this.loseLife();
+                    return;
+                }
+                
+                // Movimento com teclado (setas ou A/D)
+                if (this.keys['ArrowLeft'] || this.keys['a']) {
+                    this.player.x = Math.max(0, this.player.x - this.player.speed);
+                    this.playerTargetX = null;
+                }
+                if (this.keys['ArrowRight'] || this.keys['d']) {
+                    this.player.x = Math.min(this.canvas.width - this.player.width, this.player.x + this.player.speed);
+                    this.playerTargetX = null;
+                }
+                
+                // Movimento com mouse/touch
+                if (this.playerTargetX !== null) {
+                    const diff = this.playerTargetX - this.player.x;
+                    const moveSpeed = this.isMobile ? this.player.speed * 1.5 : this.player.speed * 2;
+                    this.player.x += Math.sign(diff) * Math.min(Math.abs(diff), moveSpeed);
+                }
+                
+                // Atualizar balas
+                for (let i = this.bullets.length - 1; i >= 0; i--) {
+                    this.bullets[i].y -= 10;
+                    
+                    if (this.bullets[i].y < 0) {
+                        this.bullets.splice(i, 1);
+                        continue;
+                    }
+                    
+                    for (let j = this.enemies.length - 1; j >= 0; j--) {
+                        if (this.checkCollision(this.bullets[i], this.enemies[j])) {
+                            this.score += this.enemies[j].points;
+                            document.getElementById('score-value').textContent = this.score;
+                            
+                            this.enemiesKilledThisLevel.add(this.enemies[j].id);
+                            
+                            for (let k = 0; k < 8; k++) {
+                                this.particles.push({
+                                    x: this.enemies[j].x + 25,
+                                    y: this.enemies[j].y + 25,
+                                    vx: (Math.random() - 0.5) * 5,
+                                    vy: (Math.random() - 0.5) * 5,
+                                    life: 40
+                                });
+                            }
+                            
+                            this.bullets.splice(i, 1);
+                            this.enemies.splice(j, 1);
+                            
+                            // Verificar se nível acabou
+                            if (this.enemies.length === 0) {
+                                this.showLevelPause();
+                            }
+                            break;
+                        }
+                    }
+                }
+                
+                // Atualizar inimigos - COMPORTAMENTO DIFERENTE PARA OS QUE "CAEM"
+                let changeDirection = false;
+                let hitRight = false;
+                let hitLeft = false;
+                
+                for (const enemy of this.enemies) {
+                    if (enemy.isDropping) {
+                        // INIMIGOS QUE "CAEM" - COMPORTAMENTO ESPECIAL
+                        enemy.y += enemy.speed; // Descem verticalmente
+                        enemy.x += enemy.dropDirection * enemy.speed * 0.5; // Movimento horizontal leve
+                        
+                        // Mudar direção se bater nas bordas
+                        if (enemy.x <= 0 || enemy.x + enemy.width >= this.canvas.width) {
+                            enemy.dropDirection *= -1;
+                        }
+                        
+                        // Se sair da tela por baixo, apenas remover - NÃO TIRA VIDA
+                        if (enemy.y > this.canvas.height) {
+                            const index = this.enemies.indexOf(enemy);
+                            if (index > -1) {
+                                this.enemies.splice(index, 1);
+                            }
+                            continue; // Passa para o próximo inimigo
+                        }
+                        
+                        // VERIFICAR COLISÃO COM O PLAYER - APENAS SE ATINGIR A CABEÇA
+                        if (this.checkHeadCollision(enemy)) {
+                            this.enemiesKilledThisLevel.add(enemy.id);
+                            
+                            const index = this.enemies.indexOf(enemy);
+                            if (index > -1) {
+                                this.enemies.splice(index, 1);
+                            }
+                            
+                            this.loseLife();
+                            break;
+                        }
+                    } else {
+                        // INIMIGOS NORMAIS
+                        enemy.x += enemy.speed * enemy.direction;
+                        
+                        // Verificar colisão com bordas
+                        if (enemy.x <= 0) {
+                            hitLeft = true;
+                        }
+                        if (enemy.x + enemy.width >= this.canvas.width) {
+                            hitRight = true;
+                        }
+                    }
+                }
+                
+                // Mudar direção dos inimigos normais quando necessário
+                if (hitRight || hitLeft) {
+                    for (const enemy of this.enemies) {
+                        if (!enemy.isDropping) {
+                            enemy.direction *= -1;
+                            // DESCIDA MAIS SUAVE NO MOBILE
+                            enemy.y += this.isMobile ? 6 : 10;
+                        }
+                    }
+                }
+                
+                // Atualizar partículas
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    this.particles[i].x += this.particles[i].vx;
+                    this.particles[i].y += this.particles[i].vy;
+                    this.particles[i].life--;
+                    
+                    if (this.particles[i].life <= 0) {
+                        this.particles.splice(i, 1);
+                    }
+                }
+                
+                if (this.shootCooldown > 0) {
+                    this.shootCooldown--;
+                }
+            }
+            
+            // NOVA FUNÇÃO: Verificar colisão apenas com a cabeça do player
+            checkHeadCollision(enemy) {
+                // A cabeça do Pai Natal está na parte superior do emoji
+                const playerHeadY = this.player.y + 10; // Aproximadamente os primeiros 10 pixels
+                const playerHeadHeight = 30; // Altura aproximada da cabeça
+                
+                return enemy.x < this.player.x + this.player.width &&
+                       enemy.x + enemy.width > this.player.x &&
+                       enemy.y < playerHeadY + playerHeadHeight &&
+                       enemy.y + enemy.height > playerHeadY;
+            }
+            
+            showLevelPause() {
+                this.gameState = 'paused';
+                this.stopAutoShoot();
+                
+                // Atualizar informações do próximo nível
+                document.getElementById('current-level-display').textContent = this.level;
+                document.getElementById('next-level').textContent = this.level + 1;
+                
+                // Verificar se vai ganhar vida bónus no próximo nível
+                if ((this.level + 1) % 5 === 0) { // Alterado de 10 para 5
+                    document.getElementById('bonus-life-message').style.display = 'block';
+                    document.getElementById('bonus-life-message').textContent = `🎉 PRÓXIMO: +1 VIDA BÓNUS! 🎉`;
+                }
+                
+                // Mostrar tela de pausa
+                document.getElementById('level-pause').style.display = 'flex';
+            }
+            
+            draw() {
+                this.ctx.fillStyle = '#002c02';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                this.ctx.strokeStyle = '#002c02';
+                this.ctx.lineWidth = 1;
+                this.ctx.beginPath();
+                this.ctx.moveTo(0, this.defenseLineY);
+                this.ctx.lineTo(this.canvas.width, this.defenseLineY);
+                this.ctx.stroke();
+                
+                // Desenhar player
+                this.drawEmoji(this.player.x, this.player.y, this.sprites.player, 50);
+                
+                // Desenhar balas
+                for (const bullet of this.bullets) {
+                    const colorIndex = Math.floor(bullet.y / 30) % this.sprites.bullet.length;
+                    this.drawEmoji(bullet.x, bullet.y, this.sprites.bullet[colorIndex], 22);
+                }
+                
+                // Desenhar inimigos
+                for (const enemy of this.enemies) {
+                    if (enemy.isDropping) {
+                        // Inimigos que "caem" em amarelo brilhante
+                        this.ctx.globalAlpha = 0.9;
+                        this.drawEmoji(enemy.x, enemy.y, enemy.type, this.isMobile ? 36 : 40);
+                        this.ctx.globalAlpha = 1.0;
+                    } else {
+                        this.drawEmoji(enemy.x, enemy.y, enemy.type, this.isMobile ? 32 : 32);
+                    }
+                }
+                
+                // Desenhar partículas
+                for (const particle of this.particles) {
+                    this.ctx.globalAlpha = particle.life / (particle.type === 'bonus' ? 70 : 40);
+                    
+                    if (particle.type === 'heart') {
+                        this.ctx.fillStyle = '#ff3366';
+                        this.ctx.font = '20px Arial';
+                        this.ctx.textAlign = 'center';
+                        this.ctx.textBaseline = 'middle';
+                        this.ctx.fillText('❤️', particle.x, particle.y);
+                    } else if (particle.type === 'bonus') {
+                        this.ctx.fillStyle = '#00ff00';
+                        this.ctx.font = '24px Arial';
+                        this.ctx.textAlign = 'center';
+                        this.ctx.textBaseline = 'middle';
+                        this.ctx.fillText('✨', particle.x, particle.y);
+                    } else {
+                        this.drawEmoji(particle.x, particle.y, this.sprites.explosion, 16);
+                    }
+                    
+                    this.ctx.globalAlpha = 1;
+                }
+            }
+            
+            drawEmoji(x, y, emoji, size) {
+                this.ctx.font = `${size}px Arial`;
+                this.ctx.textAlign = 'center';
+                this.ctx.textBaseline = 'middle';
+                this.ctx.fillText(emoji, x + size/2, y + size/2);
+            }
+            
+            shoot() {
+                if (this.shootCooldown > 0) return;
+                
+                this.bullets.push({
+                    x: this.player.x + this.player.width/2 - 11,
+                    y: this.player.y,
+                    width: 22,
+                    height: 22,
+                    speed: 10
+                });
+                
+                this.playBulletSound();
+                this.shootCooldown = 8;
+            }
+            
+            checkCollision(rect1, rect2) {
+                return rect1.x < rect2.x + rect2.width &&
+                       rect1.x + rect1.width > rect2.x &&
+                       rect1.y < rect2.y + rect2.height &&
+                       rect1.y + rect1.height > rect2.y;
+            }
+            
+            gameOver(win, message = '') {
+                this.gameState = 'gameover';
+                this.stopAutoShoot();
+                document.getElementById('game-over').style.display = 'flex';
+                document.getElementById('final-score').textContent = `Score: ${this.score}`;
+                
+                if (win) {
+                    document.getElementById('game-message').textContent = '🎉 Você salvou o Natal! 🎉';
+                } else {
+                    document.getElementById('game-message').textContent = message || 'Tente novamente para salvar o Natal!';
+                }
+            }
+            
+            winGame() {
+                this.gameState = 'win';
+                this.stopAutoShoot();
+                document.getElementById('game-win').style.display = 'flex';
+                document.getElementById('win-score').textContent = `Score: ${this.score}`;
+                
+                if (this.audioContext && this.isPlaying) {
+                    const time = this.audioContext.currentTime;
+                    
+                    const victoryNotes = [1300, 1500, 1700, 1900, 1700, 1500, 1300];
+                    
+                    victoryNotes.forEach((freq, index) => {
+                        const osc = this.audioContext.createOscillator();
+                        const gain = this.audioContext.createGain();
+                        
+                        osc.type = 'sine';
+                        osc.frequency.value = freq;
+                        
+                        gain.gain.setValueAtTime(0.15, time + (index * 0.1));
+                        gain.gain.exponentialRampToValueAtTime(0.001, time + (index * 0.1) + 0.2);
+                        
+                        osc.connect(gain);
+                        gain.connect(this.audioContext.destination);
+                        
+                        osc.start(time + (index * 0.1));
+                        osc.stop(time + (index * 0.1) + 0.2);
+                        
+                        this.activeOscillators.push({osc, stopTime: time + (index * 0.1) + 0.2});
+                    });
+                }
+            }
+            
+            gameLoop() {
+                if (this.gameState === 'playing') {
+                    this.update();
+                }
+                this.draw();
+                requestAnimationFrame(() => this.gameLoop());
+            }
+        }
+        
+        window.addEventListener('load', () => {
+            new SpaceInvadersChristmas();
+        });
+        
+        // Suporte para iOS Safari
+        document.addEventListener('touchmove', function(e) {
+            if (e.scale !== 1) { 
+                e.preventDefault(); 
+            }
+        }, { passive: false });
+        
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+        
+        // Permitir scroll na tela inicial
+        document.getElementById('game-start').addEventListener('touchmove', function(e) {
+            e.stopPropagation();
+        }, { passive: true });
+    </script>
+</body>
+</html>
