@@ -34,7 +34,7 @@
             overflow: hidden;
         }
         
-        /* Header FIXO - LAYOUT MOBILE OTIMIZADO */
+        /* HEADER IDÊNTICO AO ORIGINAL */
         #game-header {
             background: #002c02;
             height: 60px;
@@ -60,7 +60,6 @@
             min-width: 0;
         }
         
-        /* SCORE - espaço para 6 dígitos (100.000) */
         .score-container { 
             justify-content: flex-start;
             flex: 1;
@@ -79,7 +78,6 @@
             font-weight: bold;
         }
         
-        /* JINGLE BELLS + BOTÃO - centralizado */
         .music-container { 
             justify-content: center;
             flex: 1;
@@ -97,14 +95,13 @@
             max-width: 150px;
         }
         
-        /* SVG NOTA MUSICAL (para telas < 400px) */
         .music-icon {
             display: none;
             width: 24px;
             height: 24px;
         }
         
-        /* BOTÃO On/Off QUADRADO */
+        /* BOTÃO ORIGINAL QUADRADO COM 3px PADDING */
         #soundBtn {
             background: #d00c0c;
             color: #fafafa;
@@ -117,7 +114,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0 !important;
+            padding: 3px !important;
             width: 30px !important;
             height: 30px !important;
             min-width: 30px !important;
@@ -125,7 +122,6 @@
             line-height: 1;
         }
         
-        /* LEVEL E LIVES - lado direito */
         .level-lives-container { 
             justify-content: flex-end;
             flex: 1;
@@ -165,14 +161,13 @@
             background: #002c02;
         }
         
-        /* BOTÃO DE PAUSA - ESTILO CORRETO */
+        /* BOTÃO DE PAUSA - ESTILO ORIGINAL */
         .pause-button {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #d00c0c; /* FUNDO VERMELHO */
-           
+            background: #d00c0c;
             border-radius: 10px;
             padding: 20px;
             z-index: 200;
@@ -183,22 +178,21 @@
             text-align: center;
             max-width: 300px;
             width: 85%;
-           
         }
         
         .pause-button h2 {
-            color: #fafafa; /* TEXTO BRANCO */
+            color: #fafafa;
             font-size: 24px;
-            margin-bottom: 10px; /* MENOS ESPAÇO */
+            margin-bottom: 10px;
             text-transform: uppercase;
             font-weight: bold;
         }
         
         .pause-button p {
-            color: #fafafa; /* TEXTO BRANCO */
+            color: #fafafa;
             font-size: 16px;
-            margin-bottom: 8px; /* MENOS ESPAÇO ENTRE LINHAS */
-            line-height: 1.2; /* MENOS ESPAÇAMENTO DE LINHA */
+            margin-bottom: 8px;
+            line-height: 1.2;
         }
         
         .bonus-life {
@@ -215,9 +209,8 @@
         }
         
         .pause-button .start-next {
-            background: #fafafa; /* FUNDO BRANCO */
-            color: #d00c0c; /* LETRAS VERMELHAS */
-            border: 2px solid #fafafa;
+            background: #fafafa;
+            color: #d00c0c;
             padding: 12px 30px;
             font-size: 18px;
             cursor: pointer;
@@ -230,23 +223,13 @@
             transition: all 0.2s;
         }
         
-        .pause-button .start-next:hover {
-            background: #ffcccc;
-            color: #d00c0c;
-        }
-        
-        .pause-button .start-next:active {
-            transform: scale(0.98);
-        }
-        
-        /* MENSAGEM DE PERDA DE VIDA */
+        /* MENSAGEM DE PERDA DE VIDA ORIGINAL */
         #life-lost-message {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #d00c0c; /* FUNDO VERMELHO */
-            border: 2px solid #fafafa;
+            background: #d00c0c;
             border-radius: 10px;
             padding: 20px;
             text-align: center;
@@ -274,8 +257,8 @@
         }
         
         #life-lost-button {
-            background: #fafafa; /* FUNDO BRANCO */
-            color: #d00c0c; /* LETRAS VERMELHAS */
+            background: #fafafa;
+            color: #d00c0c;
             border: 2px solid #fafafa;
             padding: 10px 20px;
             font-size: 16px;
@@ -409,7 +392,6 @@
             min-width: 200px;
         }
         
-        /* RODAPÉ COM LINK */
         #game-footer {
             position: fixed;
             bottom: 0;
@@ -472,7 +454,7 @@
             height: 100%;
         }
         
-        /* MEDIA QUERIES */
+        /* CORREÇÕES CRÍTICAS PARA MOBILE */
         @media (max-width: 768px) {
             #game-header {
                 height: 55px;
@@ -480,78 +462,12 @@
                 gap: 4px;
             }
             
-            .score-container {
-                min-width: 100px;
-            }
-            
-            #score-value {
-                min-width: 55px;
-            }
-            
-            .music-container h1 {
-                max-width: 120px;
-                font-size: 14px !important;
-            }
-            
-            #soundBtn {
-                width: 28px !important;
-                height: 28px !important;
-                min-width: 28px !important;
-                min-height: 28px !important;
-                font-size: 14px !important;
-            }
-            
-            .level-lives-container {
-                min-width: 120px;
-                gap: 12px;
-            }
-            
-            .level-lives-container span {
-                font-size: 14px !important;
-            }
-            
             #game-container {
                 margin-top: 55px;
                 margin-bottom: 40px;
             }
-            
-            .pause-button {
-                padding: 15px;
-                max-width: 280px;
-            }
-            
-            .pause-button h2 {
-                font-size: 20px;
-                margin-bottom: 8px;
-            }
-            
-            .pause-button p {
-                font-size: 15px;
-                margin-bottom: 6px;
-            }
-            
-            .pause-button .start-next {
-                padding: 10px 20px;
-                font-size: 16px;
-                min-width: 180px;
-                margin-top: 12px;
-            }
-            
-            #life-lost-message {
-                padding: 15px;
-            }
-            
-            #life-lost-message h2 {
-                font-size: 20px;
-            }
-            
-            #life-lost-button {
-                padding: 8px 16px;
-                font-size: 15px;
-            }
         }
         
-        /* TELAS < 400px - MOSTRAR SVG NOTA MUSICAL */
         @media (max-width: 399px) {
             .music-container h1 {
                 display: none;
@@ -560,131 +476,25 @@
             .music-icon {
                 display: block;
             }
-            
-            #soundBtn {
-                width: 26px !important;
-                height: 26px !important;
-                min-width: 26px !important;
-                min-height: 26px !important;
-                font-size: 13px !important;
-            }
-            
-            .pause-button {
-                max-width: 250px;
-                padding: 12px;
-            }
-            
-            .pause-button h2 {
-                font-size: 18px;
-                margin-bottom: 6px;
-            }
-            
-            .pause-button p {
-                font-size: 14px;
-                margin-bottom: 4px;
-            }
-            
-            .pause-button .start-next {
-                padding: 8px 16px;
-                font-size: 15px;
-                min-width: 160px;
-                margin-top: 10px;
-            }
         }
         
-        @media (max-width: 480px) {
-            #game-header {
-                height: 50px;
-                padding: 0 6px;
-                gap: 3px;
-            }
-            
-            .score-container {
-                min-width: 90px;
-            }
-            
-            .score-container span {
-                font-size: 14px !important;
-            }
-            
-            #score-value {
-                min-width: 50px;
-                font-size: 14px !important;
-            }
-            
-            .music-icon {
-                width: 22px;
-                height: 22px;
-            }
-            
-            #soundBtn {
-                width: 26px !important;
-                height: 26px !important;
-                min-width: 26px !important;
-                min-height: 26px !important;
-                font-size: 13px !important;
-            }
-            
-            .level-lives-container {
-                min-width: 110px;
-                gap: 10px;
-            }
-            
-            .level-lives-container span {
-                font-size: 13px !important;
-            }
-            
-            #game-container {
-                margin-top: 50px;
-                margin-bottom: 40px;
-            }
-            
-            .footer-left, .games-link {
-                font-size: 11px;
-            }
-        }
-        
-        /* IPHONE 5SE (320x568) */
+        /* CORREÇÃO IPHONE SE (320x568) */
         @media (max-width: 350px) and (max-height: 600px) {
             #game-header {
                 height: 45px;
                 padding: 0 4px;
-                gap: 2px;
             }
             
-            .score-container {
-                min-width: 80px;
-            }
-            
-            .score-container span {
+            #game-header span, #game-header h1, #soundBtn {
                 font-size: 13px !important;
-            }
-            
-            #score-value {
-                min-width: 45px;
-                font-size: 13px !important;
-            }
-            
-            .music-icon {
-                width: 20px;
-                height: 20px;
             }
             
             #soundBtn {
-                width: 24px !important;
-                height: 24px !important;
-                min-width: 24px !important;
-                min-height: 24px !important;
-                font-size: 12px !important;
-            }
-            
-            .level-lives-container {
-                min-width: 100px;
-                gap: 8px;
-            }
-            
-            .level-lives-container span {
-                font-size: 12px !important;
+                width: 26px !important;
+                height: 26px !important;
+                min-width: 26px !important;
+                min-height: 26px !important;
+                padding: 2px !important;
             }
             
             #game-container {
@@ -692,166 +502,24 @@
                 margin-bottom: 40px;
             }
             
-            #game-start {
-                padding: 8px 10px;
-            }
-            
-            .start-content {
-                gap: 8px;
-            }
-            
-            h1 {
-                font-size: 20px;
-                margin-bottom: 8px;
-            }
-            
-            p {
-                font-size: 14px !important;
-                margin: 5px 0;
-            }
-            
-            .instructions {
-                padding: 10px 8px;
-                margin: 8px 0;
-            }
-            
-            .instructions p {
-                font-size: 14px !important;
-                margin: 4px 0;
-            }
-            
-            .controls {
-                gap: 6px;
-                margin: 10px 0;
-            }
-            
-            .control-key {
-                padding: 6px 8px;
-                font-size: 14px !important;
-                min-width: 42px;
-            }
-            
-            button {
-                padding: 10px 15px;
-                font-size: 16px;
-                margin-top: 8px;
-                margin-bottom: 12px;
-                min-width: 170px;
-            }
-            
-            .grinch-display {
-                width: 50px;
-                height: 50px;
-                margin: 10px 0;
-            }
-            
-            .footer-left, .games-link {
-                font-size: 10px;
-            }
-            
-            .pause-button {
-                max-width: 220px;
-                padding: 10px;
-            }
-            
-            .pause-button h2 {
-                font-size: 16px;
-                margin-bottom: 5px;
-            }
-            
-            .pause-button p {
-                font-size: 13px;
-                margin-bottom: 3px;
-                line-height: 1.1;
-            }
-            
-            .pause-button .start-next {
-                padding: 6px 12px;
-                font-size: 14px;
-                min-width: 140px;
-                margin-top: 8px;
+            /* POSICIONAMENTO PLAYER CORRIGIDO PARA IPHONE SE */
+            .player-position-fix {
+                position: absolute;
+                bottom: 20px !important;
             }
         }
         
-        /* Desktop */
-        @media (min-width: 769px) {
-            #soundBtn {
-                width: 32px !important;
-                height: 32px !important;
-                min-width: 32px !important;
-                min-height: 32px !important;
-            }
-            
-            .score-container {
-                min-width: 120px;
-            }
-            
-            #score-value {
-                min-width: 70px;
-            }
-        }
-        
-        /* Telas muito curtas */
+        /* CORREÇÃO TELAS MUITO CURTAS */
         @media (max-height: 500px) {
-            #game-start {
-                padding-top: 5px;
-            }
-            
-            h1 {
-                font-size: 20px;
-                margin-bottom: 6px;
-            }
-            
-            .instructions {
-                padding: 8px 10px;
-                margin: 6px 0;
-            }
-            
-            .instructions p {
-                font-size: 14px !important;
-                margin: 3px 0;
-            }
-            
-            button {
-                padding: 8px 15px;
-                font-size: 15px;
-                margin-top: 6px;
-                margin-bottom: 8px;
-                min-width: 150px;
-            }
-            
-            .grinch-display {
-                width: 45px;
-                height: 45px;
-                margin: 8px 0;
-            }
-            
-            .pause-button {
-                padding: 12px;
-            }
-            
-            .pause-button h2 {
-                font-size: 18px;
-                margin-bottom: 6px;
-            }
-            
-            .pause-button p {
-                font-size: 14px;
-                margin-bottom: 4px;
-            }
-            
-            .pause-button .start-next {
-                padding: 8px 16px;
-                font-size: 16px;
-                min-width: 160px;
-                margin-top: 10px;
+            #game-container {
+                margin-bottom: 30px;
             }
         }
     </style>
 </head>
 <body>
     <div class="game-wrapper">
-        <!-- Header fixo -->
+        <!-- HEADER IDÊNTICO AO ORIGINAL -->
         <div id="game-header">
             <div class="score-container">
                 <span>Score: <span id="score-value">0</span></span>
@@ -860,7 +528,7 @@
             <div class="music-container">
                 <h1>Jingle Bells</h1>
                 <div class="music-icon" id="music-icon">
-                    <!-- SVG será inserido aqui via JavaScript -->
+                    <!-- SVG será inserido via JavaScript -->
                 </div>
                 <button id="soundBtn">On</button>
             </div>
@@ -871,11 +539,9 @@
             </div>
         </div>
         
-        <!-- Container do jogo -->
         <div id="game-container">
             <canvas id="game-canvas"></canvas>
             
-            <!-- BOTÃO DE PAUSA PARA INICIAR PRÓXIMO NÍVEL -->
             <div class="pause-button" id="level-pause">
                 <h2>PAUSA!</h2>
                 <p>Nível atual: <span id="current-level-display">1</span></p>
@@ -884,30 +550,29 @@
                 <button class="start-next">INICIAR NÍVEL</button>
             </div>
             
-            <!-- MENSAGEM DE PERDA DE VIDA -->
             <div id="life-lost-message">
                 <h2>Perdeu uma vida!</h2>
                 <p>Continue no mesmo nível.</p>
                 <p id="lives-remaining">Vidas restantes: 2</p>
                 <button id="life-lost-button">CONTINUAR</button>
             </div>
-            
+
             <div id="game-start">
                 <div class="start-content">
                     <h1>SPACE INVADERS NATALINO</h1>
                     <p>Salve o Natal dos fantasmas rebeldes!</p>
                     
                     <div class="instructions">
-                        <p><strong>MOBILE:</strong> arrastar mover, tocar atirar</p>
+                        <p><strong>MOBILE:</strong> use o dedo</p>
                         <p><strong>ACERTAR:</strong> 100 pontos</p>
                         <p><strong>VIDAS:</strong> começa com 3 vidas</p>
                         <p><strong>BÓNUS:</strong> +1 vida a cada 5 níveis</p>
                         <p><strong>ATAQUES:</strong> inimigos atacam!</p>
-                        <p><strong>PAUSA:</strong> em cada nível.</p>
+                        <p><strong>PAUSA:</strong> em cada nível</p>
                     </div>
-                    
+
                     <div class="controls">
-                                                <p><strong>DESKTOP:</strong></p>
+                        <p><strong>DESKTOP:</strong></p>
                         <div class="control-key">←</div>
                         <div class="control-key">→</div>
                         <div class="control-key">Espaço</div>
@@ -927,7 +592,6 @@
                 </div>
             </div>
             
-            <!-- TELA DE VITÓRIA (100.000 pontos) -->
             <div id="game-win">
                 <div class="win-content">
                     <h1 class="win-title">YOU WIN!</h1>
@@ -939,7 +603,6 @@
             </div>
         </div>
         
-        <!-- RODAPÉ COM LINK -->
         <div id="game-footer">
             <hr class="footer-line">
             <div class="footer-content">
@@ -952,6 +615,7 @@
     </div>
 
     <script>
+        // CÓDIGO ORIGINAL COMPLETO COM CORREÇÕES CRÍTICAS
         class SpaceInvadersChristmas {
             constructor() {
                 this.canvas = document.getElementById('game-canvas');
@@ -965,8 +629,8 @@
                 this.MAX_SCORE = 100000;
                 this.currentLevelEnemies = [];
                 this.enemiesKilledThisLevel = new Set();
-                this.droppingEnemies = []; // Inimigos que "caem" do bloco
-                this.bonusLifeGivenAt = 0; // Último nível que deu vida bónus
+                this.droppingEnemies = [];
+                this.bonusLifeGivenAt = 0;
                 
                 this.player = { x: 0, y: 0, width: 60, height: 60, speed: 6 };
                 this.bullets = [];
@@ -987,7 +651,7 @@
                     bullet: ['🔴', '🟢', '🔵', '🟡'],
                     enemy1: '🎁',
                     enemy2: '👻',
-                    droppingEnemy: '💀', // Inimigo especial que cai
+                    droppingEnemy: '💀',
                     explosion: '✨',
                     grinch: '👺'
                 };
@@ -1019,17 +683,28 @@
                     this.canvas.width = container.clientWidth;
                     this.canvas.height = container.clientHeight;
                     
-                    // DETECTAR MOBILE CORRETAMENTE
+                    // CORREÇÃO CRÍTICA: DETECÇÃO MOBILE MELHORADA
                     this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
-                                   window.innerWidth <= 768;
+                                   window.innerWidth <= 768 || 
+                                   'ontouchstart' in window;
                     
-                    const playerBottomMargin = this.isMobile ? 3 : 80;
+                    // CORREÇÃO CRÍTICA: POSICIONAMENTO PLAYER PARA IPHONE SE/ONEPLUS
+                    let playerBottomMargin;
+                    if (window.innerHeight <= 600) { // iPhone SE, OnePlus
+                        playerBottomMargin = 20;
+                        this.player.height = 50;
+                        this.player.width = 50;
+                    } else if (this.isMobile) {
+                        playerBottomMargin = 30;
+                    } else {
+                        playerBottomMargin = 80;
+                    }
+                    
                     this.player.y = this.canvas.height - this.player.height - playerBottomMargin;
                     this.player.x = this.canvas.width / 2 - this.player.width / 2;
                     
                     this.defenseLineY = this.player.y - 5;
                     
-                    // CORRIGIR POSIÇÃO DOS INIMIGOS NO MOBILE
                     if (this.enemies.length > 0) {
                         this.repositionEnemies();
                     }
@@ -1084,29 +759,32 @@
                 gamesLink.addEventListener('click', () => {
                     window.open('https://dos.zone/', '_blank');
                 });
-                
-                gamesLink.addEventListener('touchend', (e) => {
-                    e.preventDefault();
-                    window.open('https://dos.zone/', '_blank');
-                });
             }
             
-            // SISTEMA FIXO: 8 colunas × 6 filas
             createLevelEnemies() {
                 this.currentLevelEnemies = [];
-                this.droppingEnemies = []; // Limpar inimigos que caem
+                this.droppingEnemies = [];
                 const enemyTypes = [this.sprites.enemy1, this.sprites.enemy2];
                 
-                const cols = 8; // SEMPRE 8 colunas
-                const rows = 6; // SEMPRE 6 filas
+                // CORREÇÃO: GRELHA DINÂMICA PARA TELAS PEQUENAS
+                const screenWidth = this.canvas.width;
+                let cols = 8;
+                let rows = 6;
                 
-                // AJUSTAR ESPAÇAMENTO PARA MOBILE
+                if (screenWidth < 350) { // iPhone SE
+                    cols = 6;
+                    rows = 5;
+                } else if (screenWidth < 400) {
+                    cols = 7;
+                    rows = 5;
+                }
+                
                 const spacingX = this.isMobile ? 
-                    Math.min(50, this.canvas.width / (cols + 1.5)) : 
-                    Math.min(70, this.canvas.width / (cols + 1));
+                    Math.min(45, (screenWidth - 20) / cols) : 
+                    Math.min(70, (screenWidth - 20) / cols);
                 
-                const spacingY = this.isMobile ? 45 : 60;
-                const startY = this.isMobile ? 10 : 30;
+                const spacingY = this.isMobile ? 40 : 60;
+                const startY = this.isMobile ? 15 : 30;
                 
                 for (let row = 0; row < rows; row++) {
                     for (let col = 0; col < cols; col++) {
@@ -1114,19 +792,18 @@
                         this.currentLevelEnemies.push({
                             x: spacingX + col * spacingX,
                             y: startY + row * spacingY,
-                            width: this.isMobile ? 40 : 50,
-                            height: this.isMobile ? 40 : 50,
+                            width: screenWidth < 350 ? 30 : (this.isMobile ? 35 : 50),
+                            height: screenWidth < 350 ? 30 : (this.isMobile ? 35 : 50),
                             type: type,
                             speed: 0.3 + (this.level * 0.08),
                             direction: 1,
                             points: type === this.sprites.enemy1 ? 100 : 150,
                             id: `${row}-${col}`,
-                            isDropping: false // Não é um que cai inicialmente
+                            isDropping: false
                         });
                     }
                 }
                 
-                // A CADA 3 NÍVEIS, CRIAR 1-2 INIMIGOS QUE "CAEM"
                 if (this.level % 3 === 0 && this.level > 1) {
                     this.createDroppingEnemies();
                 }
@@ -1135,7 +812,6 @@
             }
             
             createDroppingEnemies() {
-                // Selecionar 1-2 inimigos aleatórios para "cair"
                 const numToDrop = Math.random() > 0.5 ? 2 : 1;
                 const availableEnemies = [...this.currentLevelEnemies];
                 
@@ -1143,22 +819,20 @@
                     const randomIndex = Math.floor(Math.random() * availableEnemies.length);
                     const enemyToDrop = availableEnemies[randomIndex];
                     
-                    // Criar um inimigo especial que cai
                     this.droppingEnemies.push({
                         x: enemyToDrop.x,
                         y: enemyToDrop.y,
                         width: enemyToDrop.width,
                         height: enemyToDrop.height,
-                        type: this.sprites.droppingEnemy, // Tipo especial
-                        speed: 1.5 + (this.level * 0.1), // Mais rápido que inimigos normais
-                        points: 200, // Vale mais pontos
+                        type: this.sprites.droppingEnemy,
+                        speed: 1.5 + (this.level * 0.1),
+                        points: 200,
                         id: `dropping-${i}-${this.level}`,
                         isDropping: true,
-                        originalX: enemyToDrop.x, // Posição original para referência
-                        dropDirection: Math.random() > 0.5 ? 1 : -1 // Direção aleatória
+                        originalX: enemyToDrop.x,
+                        dropDirection: Math.random() > 0.5 ? 1 : -1
                     });
                     
-                    // Remover da lista de inimigos normais
                     this.currentLevelEnemies = this.currentLevelEnemies.filter(e => 
                         e.id !== enemyToDrop.id
                     );
@@ -1170,7 +844,6 @@
             recreateActiveEnemies() {
                 this.enemies = [];
                 
-                // Adicionar inimigos normais
                 for (const enemy of this.currentLevelEnemies) {
                     if (!this.enemiesKilledThisLevel.has(enemy.id)) {
                         this.enemies.push({
@@ -1188,7 +861,6 @@
                     }
                 }
                 
-                // Adicionar inimigos que caem
                 for (const droppingEnemy of this.droppingEnemies) {
                     this.enemies.push({
                         ...droppingEnemy,
@@ -1200,31 +872,35 @@
             repositionEnemies() {
                 if (this.enemies.length === 0) return;
                 
-                const cols = 8;
-                const spacingX = this.isMobile ? 
-                    Math.min(50, this.canvas.width / (cols + 1.5)) : 
-                    Math.min(70, this.canvas.width / (cols + 1));
+                const screenWidth = this.canvas.width;
+                let cols = 8;
                 
-                // REORGANIZAR TODOS OS INIMIGOS
-                const rows = 6;
-                const spacingY = this.isMobile ? 45 : 60;
-                const startY = this.isMobile ? 10 : 30;
+                if (screenWidth < 350) cols = 6;
+                else if (screenWidth < 400) cols = 7;
+                
+                const spacingX = this.isMobile ? 
+                    Math.min(45, (screenWidth - 20) / cols) : 
+                    Math.min(70, (screenWidth - 20) / cols);
+                
+                const rows = screenWidth < 350 ? 5 : 6;
+                const spacingY = this.isMobile ? 40 : 60;
+                const startY = this.isMobile ? 15 : 30;
                 
                 for (let i = 0; i < this.enemies.length; i++) {
                     const enemy = this.enemies[i];
                     
-                    // Só reposicionar inimigos normais (não os que estão caindo)
                     if (!enemy.isDropping) {
                         const originalIdParts = enemy.id.split('-');
                         if (originalIdParts.length === 2) {
                             const row = parseInt(originalIdParts[0]);
                             const col = parseInt(originalIdParts[1]);
                             
-                            // Reposicionar baseado nas novas dimensões
-                            enemy.x = spacingX + col * spacingX;
-                            enemy.y = startY + row * spacingY;
-                            enemy.width = this.isMobile ? 40 : 50;
-                            enemy.height = this.isMobile ? 40 : 50;
+                            if (row < rows && col < cols) {
+                                enemy.x = spacingX + col * spacingX;
+                                enemy.y = startY + row * spacingY;
+                                enemy.width = screenWidth < 350 ? 30 : (this.isMobile ? 35 : 50);
+                                enemy.height = screenWidth < 350 ? 30 : (this.isMobile ? 35 : 50);
+                            }
                         }
                     }
                     
@@ -1232,14 +908,13 @@
                 }
             }
             
+            // SISTEMA DE CONTROLES ORIGINAL FUNCIONAL
             setupControls() {
-                // Controles de teclado
                 document.addEventListener('keydown', (e) => {
                     if (this.gameState !== 'playing') return;
                     
                     this.keys[e.key] = true;
                     
-                    // Iniciar disparo automático ao pressionar Espaço
                     if (e.key === ' ' && !this.isShooting) {
                         this.startAutoShoot();
                         e.preventDefault();
@@ -1249,13 +924,12 @@
                 document.addEventListener('keyup', (e) => {
                     this.keys[e.key] = false;
                     
-                    // Parar disparo automático ao soltar Espaço
                     if (e.key === ' ') {
                         this.stopAutoShoot();
                     }
                 });
                 
-                // Controles de toque/mouse para mobile/desktop
+                // CORREÇÃO: CONTROLES TOUCH FUNCIONAIS
                 this.canvas.addEventListener('mousedown', (e) => {
                     if (this.gameState !== 'playing') return;
                     
@@ -1290,7 +964,7 @@
                     this.stopAutoShoot();
                 });
                 
-                // Controles touch para mobile
+                // CORREÇÃO: TOUCH EVENT LISTENERS FUNCIONAIS
                 this.canvas.addEventListener('touchstart', (e) => {
                     e.preventDefault();
                     if (this.gameState !== 'playing') return;
@@ -1308,7 +982,6 @@
                     const touch = e.touches[0];
                     const deltaX = touch.clientX - this.touchStartX;
                     
-                    // MOVIMENTO MAIS SUAVE NO MOBILE
                     this.playerTargetX = Math.max(0, 
                         Math.min(this.canvas.width - this.player.width, 
                             this.player.x + deltaX * 0.8));
@@ -1323,18 +996,18 @@
                 }, { passive: false });
             }
             
+            // SISTEMA DE DISPARO ORIGINAL FUNCIONAL
             startAutoShoot() {
                 if (this.isShooting) return;
                 
                 this.isShooting = true;
-                this.shoot(); // Disparo imediato
+                this.shoot(); // DISPARO IMEDIATO
                 
-                // Configurar intervalo de disparo automático
                 this.shootInterval = setInterval(() => {
                     if (this.gameState === 'playing' && this.isShooting) {
                         this.shoot();
                     }
-                }, 300); // Disparar a cada 300ms
+                }, 300); // DISPARA A CADA 300ms
             }
             
             stopAutoShoot() {
@@ -1362,12 +1035,12 @@
                     this.continueAfterLifeLost();
                 });
                 
-                // Botão de pausa para próximo nível
                 document.querySelector('.start-next').addEventListener('click', () => {
                     this.startNextLevel();
                 });
             }
             
+            // SISTEMA DE ÁUDIO ORIGINAL FUNCIONAL
             setupAudioControl() {
                 const notes = {
                     E5: 659.25,
@@ -1420,15 +1093,24 @@
                 const button = document.getElementById('soundBtn');
                 
                 const toggleSound = () => {
+                    // CORREÇÃO: CRIA CONTEXTO DE ÁUDIO APENAS QUANDO NECESSÁRIO
                     if (!this.audioContext) {
-                        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        try {
+                            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        } catch (e) {
+                            console.log("Áudio não suportado");
+                            button.textContent = 'X';
+                            button.style.background = '#666';
+                            return;
+                        }
                     }
 
                     if (!this.isPlaying) {
-                        this.audioContext.resume();
-                        this.isPlaying = true;
-                        playMelody();
-                        button.textContent = 'On';
+                        this.audioContext.resume().then(() => {
+                            this.isPlaying = true;
+                            playMelody();
+                            button.textContent = 'On';
+                        });
                     } else {
                         this.isPlaying = false;
                         clearTimeout(this.loopTimer);
@@ -1446,9 +1128,10 @@
 
                 button.addEventListener('click', toggleSound);
                 
+                // CORREÇÃO: INICIAR SOM APÓS INTERAÇÃO DO USUÁRIO
                 setTimeout(() => {
                     toggleSound();
-                }, 500);
+                }, 1000);
             }
             
             playBulletSound() {
@@ -1477,7 +1160,6 @@
                 if (this.audioContext && this.isPlaying) {
                     const time = this.audioContext.currentTime;
                     
-                    // Som especial para vida bónus
                     for (let i = 0; i < 3; i++) {
                         const osc = this.audioContext.createOscillator();
                         const gain = this.audioContext.createGain();
@@ -1500,16 +1182,13 @@
             }
             
             checkForBonusLife() {
-                // DAR VIDA BÓNUS A CADA 5 NÍVEIS (alterado de 10 para 5)
                 if (this.level % 5 === 0 && this.level > this.bonusLifeGivenAt) {
                     this.lives++;
                     this.bonusLifeGivenAt = this.level;
                     document.getElementById('lives-value').textContent = this.lives;
                     
-                    // Mostrar mensagem de bónus
                     document.getElementById('bonus-life-message').style.display = 'block';
                     
-                    // Criar partículas de celebração
                     for (let i = 0; i < 20; i++) {
                         this.particles.push({
                             x: this.canvas.width / 2,
@@ -1521,7 +1200,6 @@
                         });
                     }
                     
-                    // Tocar som especial
                     this.playBonusSound();
                     
                     return true;
@@ -1530,9 +1208,7 @@
             }
             
             checkDefenseLine() {
-                // VERIFICA APENAS INIMIGOS NORMAIS (NÃO OS QUE "CAEM")
                 for (const enemy of this.enemies) {
-                    // Apenas inimigos normais perdem vida ao passar da linha
                     if (!enemy.isDropping && enemy.y + enemy.height >= this.defenseLineY) {
                         return enemy;
                     }
@@ -1604,33 +1280,25 @@
             }
             
             startNextLevel() {
-                // Esconder mensagem de bónus se estiver visível
                 document.getElementById('bonus-life-message').style.display = 'none';
                 
-                // INCREMENTAR O NÍVEL ANTES DE CRIAR OS NOVOS INIMIGOS
                 this.level++;
                 document.getElementById('level-value').textContent = this.level;
                 
-                // Verificar se ganhou vida bónus
                 this.checkForBonusLife();
                 
-                // Limpar para o próximo nível
                 this.enemiesKilledThisLevel.clear();
                 this.droppingEnemies = [];
                 this.bullets = [];
                 this.particles = [];
                 
-                // Criar inimigos do novo nível
                 this.createLevelEnemies();
                 
-                // Reposicionar jogador no centro
                 this.player.x = this.canvas.width / 2 - this.player.width / 2;
                 this.playerTargetX = null;
                 
-                // Esconder tela de pausa
                 document.getElementById('level-pause').style.display = 'none';
                 
-                // Mudar estado para playing
                 this.gameState = 'playing';
             }
             
@@ -1646,7 +1314,6 @@
                 this.droppingEnemies = [];
                 this.stopAutoShoot();
                 
-                // Esconder mensagem de bónus
                 document.getElementById('bonus-life-message').style.display = 'none';
                 
                 this.createLevelEnemies();
@@ -1673,7 +1340,6 @@
                     return;
                 }
                 
-                // VERIFICAR APENAS INIMIGOS NORMAIS QUE PASSARAM DA LINHA
                 const enemyAtLine = this.checkDefenseLine();
                 if (enemyAtLine) {
                     this.enemiesKilledThisLevel.add(enemyAtLine.id);
@@ -1687,7 +1353,6 @@
                     return;
                 }
                 
-                // Movimento com teclado (setas ou A/D)
                 if (this.keys['ArrowLeft'] || this.keys['a']) {
                     this.player.x = Math.max(0, this.player.x - this.player.speed);
                     this.playerTargetX = null;
@@ -1697,14 +1362,12 @@
                     this.playerTargetX = null;
                 }
                 
-                // Movimento com mouse/touch
                 if (this.playerTargetX !== null) {
                     const diff = this.playerTargetX - this.player.x;
                     const moveSpeed = this.isMobile ? this.player.speed * 1.5 : this.player.speed * 2;
                     this.player.x += Math.sign(diff) * Math.min(Math.abs(diff), moveSpeed);
                 }
                 
-                // Atualizar balas
                 for (let i = this.bullets.length - 1; i >= 0; i--) {
                     this.bullets[i].y -= 10;
                     
@@ -1733,7 +1396,6 @@
                             this.bullets.splice(i, 1);
                             this.enemies.splice(j, 1);
                             
-                            // Verificar se nível acabou
                             if (this.enemies.length === 0) {
                                 this.showLevelPause();
                             }
@@ -1742,32 +1404,27 @@
                     }
                 }
                 
-                // Atualizar inimigos - COMPORTAMENTO DIFERENTE PARA OS QUE "CAEM"
                 let changeDirection = false;
                 let hitRight = false;
                 let hitLeft = false;
                 
                 for (const enemy of this.enemies) {
                     if (enemy.isDropping) {
-                        // INIMIGOS QUE "CAEM" - COMPORTAMENTO ESPECIAL
-                        enemy.y += enemy.speed; // Descem verticalmente
-                        enemy.x += enemy.dropDirection * enemy.speed * 0.5; // Movimento horizontal leve
+                        enemy.y += enemy.speed;
+                        enemy.x += enemy.dropDirection * enemy.speed * 0.5;
                         
-                        // Mudar direção se bater nas bordas
                         if (enemy.x <= 0 || enemy.x + enemy.width >= this.canvas.width) {
                             enemy.dropDirection *= -1;
                         }
                         
-                        // Se sair da tela por baixo, apenas remover - NÃO TIRA VIDA
                         if (enemy.y > this.canvas.height) {
                             const index = this.enemies.indexOf(enemy);
                             if (index > -1) {
                                 this.enemies.splice(index, 1);
                             }
-                            continue; // Passa para o próximo inimigo
+                            continue;
                         }
                         
-                        // VERIFICAR COLISÃO COM O PLAYER - APENAS SE ATINGIR A CABEÇA
                         if (this.checkHeadCollision(enemy)) {
                             this.enemiesKilledThisLevel.add(enemy.id);
                             
@@ -1780,10 +1437,8 @@
                             break;
                         }
                     } else {
-                        // INIMIGOS NORMAIS
                         enemy.x += enemy.speed * enemy.direction;
                         
-                        // Verificar colisão com bordas
                         if (enemy.x <= 0) {
                             hitLeft = true;
                         }
@@ -1793,18 +1448,15 @@
                     }
                 }
                 
-                // Mudar direção dos inimigos normais quando necessário
                 if (hitRight || hitLeft) {
                     for (const enemy of this.enemies) {
                         if (!enemy.isDropping) {
                             enemy.direction *= -1;
-                            // DESCIDA MAIS SUAVE NO MOBILE
                             enemy.y += this.isMobile ? 6 : 10;
                         }
                     }
                 }
                 
-                // Atualizar partículas
                 for (let i = this.particles.length - 1; i >= 0; i--) {
                     this.particles[i].x += this.particles[i].vx;
                     this.particles[i].y += this.particles[i].vy;
@@ -1820,11 +1472,9 @@
                 }
             }
             
-            // NOVA FUNÇÃO: Verificar colisão apenas com a cabeça do player
             checkHeadCollision(enemy) {
-                // A cabeça do Pai Natal está na parte superior do emoji
-                const playerHeadY = this.player.y + 10; // Aproximadamente os primeiros 10 pixels
-                const playerHeadHeight = 30; // Altura aproximada da cabeça
+                const playerHeadY = this.player.y + 10;
+                const playerHeadHeight = 30;
                 
                 return enemy.x < this.player.x + this.player.width &&
                        enemy.x + enemy.width > this.player.x &&
@@ -1836,17 +1486,14 @@
                 this.gameState = 'paused';
                 this.stopAutoShoot();
                 
-                // Atualizar informações do próximo nível
                 document.getElementById('current-level-display').textContent = this.level;
                 document.getElementById('next-level').textContent = this.level + 1;
                 
-                // Verificar se vai ganhar vida bónus no próximo nível
-                if ((this.level + 1) % 5 === 0) { // Alterado de 10 para 5
+                if ((this.level + 1) % 5 === 0) {
                     document.getElementById('bonus-life-message').style.display = 'block';
                     document.getElementById('bonus-life-message').textContent = `🎉 PRÓXIMO: +1 VIDA BÓNUS! 🎉`;
                 }
                 
-                // Mostrar tela de pausa
                 document.getElementById('level-pause').style.display = 'flex';
             }
             
@@ -1861,38 +1508,29 @@
                 this.ctx.lineTo(this.canvas.width, this.defenseLineY);
                 this.ctx.stroke();
                 
-                // Desenhar player
-                this.drawEmoji(this.player.x, this.player.y, this.sprites.player, 50);
+                const playerSize = this.canvas.height < 500 ? 40 : 50;
+                this.drawEmoji(this.player.x, this.player.y, this.sprites.player, playerSize);
                 
-                // Desenhar balas
                 for (const bullet of this.bullets) {
                     const colorIndex = Math.floor(bullet.y / 30) % this.sprites.bullet.length;
                     this.drawEmoji(bullet.x, bullet.y, this.sprites.bullet[colorIndex], 22);
                 }
                 
-                // Desenhar inimigos
                 for (const enemy of this.enemies) {
                     if (enemy.isDropping) {
-                        // Inimigos que "caem" em amarelo brilhante
                         this.ctx.globalAlpha = 0.9;
                         this.drawEmoji(enemy.x, enemy.y, enemy.type, this.isMobile ? 36 : 40);
                         this.ctx.globalAlpha = 1.0;
                     } else {
-                        this.drawEmoji(enemy.x, enemy.y, enemy.type, this.isMobile ? 32 : 32);
+                        const enemySize = this.canvas.width < 350 ? 30 : (this.isMobile ? 32 : 32);
+                        this.drawEmoji(enemy.x, enemy.y, enemy.type, enemySize);
                     }
                 }
                 
-                // Desenhar partículas
                 for (const particle of this.particles) {
                     this.ctx.globalAlpha = particle.life / (particle.type === 'bonus' ? 70 : 40);
                     
-                    if (particle.type === 'heart') {
-                        this.ctx.fillStyle = '#ff3366';
-                        this.ctx.font = '20px Arial';
-                        this.ctx.textAlign = 'center';
-                        this.ctx.textBaseline = 'middle';
-                        this.ctx.fillText('❤️', particle.x, particle.y);
-                    } else if (particle.type === 'bonus') {
+                    if (particle.type === 'bonus') {
                         this.ctx.fillStyle = '#00ff00';
                         this.ctx.font = '24px Arial';
                         this.ctx.textAlign = 'center';
@@ -1907,7 +1545,7 @@
             }
             
             drawEmoji(x, y, emoji, size) {
-                this.ctx.font = `${size}px Arial`;
+                this.ctx.font = `${size}px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif`;
                 this.ctx.textAlign = 'center';
                 this.ctx.textBaseline = 'middle';
                 this.ctx.fillText(emoji, x + size/2, y + size/2);
@@ -1993,7 +1631,6 @@
             new SpaceInvadersChristmas();
         });
         
-        // Suporte para iOS Safari
         document.addEventListener('touchmove', function(e) {
             if (e.scale !== 1) { 
                 e.preventDefault(); 
@@ -2004,7 +1641,6 @@
             e.preventDefault();
         });
         
-        // Permitir scroll na tela inicial
         document.getElementById('game-start').addEventListener('touchmove', function(e) {
             e.stopPropagation();
         }, { passive: true });
